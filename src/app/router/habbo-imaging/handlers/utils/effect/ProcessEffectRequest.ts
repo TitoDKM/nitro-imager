@@ -1,10 +1,9 @@
 import { AvatarAction, IAvatarImage } from '../../../../../avatar';
-import { GetEffectRequest } from '../GetEffectRequest';
 import { RequestQuery } from '../RequestQuery';
 
 export const ProcessEffectRequest = (query: RequestQuery, avatar: IAvatarImage) =>
 {
-    const effect: number = (GetEffectRequest(query) || null);
+    const effect: number = ((query.effect && query.effect.length) ? parseInt(query.effect) : null);
 
     if(!effect) return;
 

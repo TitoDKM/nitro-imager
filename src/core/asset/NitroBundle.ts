@@ -10,7 +10,7 @@ export class NitroBundle
     private _jsonFile: IAssetData = null;
     private _baseTexture: Image = null;
 
-    public static async from(buffer: ArrayBuffer): Promise<NitroBundle>
+    public static async from(buffer: ArrayBuffer | Uint8Array): Promise<NitroBundle>
     {
         const bundle = new NitroBundle();
 
@@ -19,11 +19,25 @@ export class NitroBundle
         return bundle;
     }
 
-    private static arrayBufferToBase64(buffer: ArrayBuffer): string
+    private static toArrayBuffer(buffer: ArrayBuffer | Uint8Array): ArrayBuffer
+    {
+        if(buffer instanceof Uint8Array)
+        {
+            const copy = new Uint8Array(buffer.byteLength);
+
+            copy.set(buffer);
+
+            return copy.buffer;
+        }
+
+        return buffer;
+    }
+
+    private static arrayBufferToBase64(buffer: ArrayBuffer | Uint8Array): string
     {
         let binary = '';
 
-        const bytes = new Uint8Array(buffer);
+        const bytes = new Uint8Array(NitroBundle.toArrayBuffer(buffer));
         const len   = bytes.byteLength;
 
         for(let i = 0; i < len; i++) (binary += String.fromCharCode(bytes[i]));
@@ -33,9 +47,9 @@ export class NitroBundle
         return newBuffer.toString('base64');
     }
 
-    private async parse(arrayBuffer: ArrayBuffer): Promise<void>
+    private async parse(arrayBuffer: ArrayBuffer | Uint8Array): Promise<void>
     {
-        const binaryReader = wrap(arrayBuffer);
+        const binaryReader = wrap(NitroBundle.toArrayBuffer(arrayBuffer));
 
         let fileCount = binaryReader.readShort();
 
@@ -48,13 +62,13 @@ export class NitroBundle
 
             if(fileName.endsWith('.json'))
             {
-                const decompressed = inflate((buffer.toArrayBuffer() as Data));
+                const decompressed = inflate((buffer.toArrayBuffer() as unknown as Data));
 
                 this._jsonFile = JSON.parse(NitroBundle.TEXT_DECODER.decode(decompressed));
             }
             else
             {
-                const decompressed = inflate((buffer.toArrayBuffer() as Data));
+                const decompressed = inflate((buffer.toArrayBuffer() as unknown as Data));
                 const base64 = NitroBundle.arrayBufferToBase64(decompressed);
                 const baseTexture = await loadImage('data:image/png;base64,' + base64);
 

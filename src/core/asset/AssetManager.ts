@@ -105,7 +105,7 @@ export class AssetManager extends NitroManager implements IAssetManager
 
             catch(err)
             {
-
+                this.logger.error((err?.message || err || ('Failed to download asset: ' + url)));
             }
         }
 

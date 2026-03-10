@@ -42,6 +42,6 @@ export class BinaryReader
 
     public toArrayBuffer(): ArrayBuffer
     {
-        return this._dataView.buffer;
+        return (this._dataView.buffer as unknown as ArrayBuffer);
     }
 }
