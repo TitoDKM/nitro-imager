@@ -1,10 +1,9 @@
 import { AvatarAction, IAvatarImage } from '../../../../../avatar';
-import { GetDanceRequest } from '../GetDanceRequest';
 import { RequestQuery } from '../RequestQuery';
 
 export const ProcessDanceRequest = (query: RequestQuery, avatar: IAvatarImage) =>
 {
-    const dance: number = (GetDanceRequest(query) || null);
+    const dance: number = ((query.dance && query.dance.length) ? parseInt(query.dance) : null);
 
     if(!dance) return;
 

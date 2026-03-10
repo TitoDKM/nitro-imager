@@ -1,5 +1,4 @@
 import { readFile } from 'fs';
-import fetch from 'node-fetch';
 import { promisify } from 'util';
 import { File } from './File';
 
@@ -34,9 +33,10 @@ export class FileUtilities
         if(url.startsWith('http'))
         {
             const data = await fetch(url);
-            const arrayBuffer = await data.arrayBuffer();
 
-            if(data.headers.get('Content-Type') !== 'application/octet-stream') return;
+            if(!data.ok) return null;
+
+            const arrayBuffer = await data.arrayBuffer();
 
             if(arrayBuffer) content = Buffer.from(arrayBuffer);
         }

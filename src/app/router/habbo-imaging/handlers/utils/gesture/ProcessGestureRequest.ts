@@ -1,10 +1,9 @@
 import { AvatarAction, IAvatarImage } from '../../../../../avatar';
-import { GetGestureRequest } from '../GetGestureRequest';
 import { RequestQuery } from '../RequestQuery';
 
 export const ProcessGestureRequest = (query: RequestQuery, avatar: IAvatarImage) =>
 {
-    const gesture: string = (GetGestureRequest(query) || null);
+    const gesture: string = ((query.gesture && query.gesture.length) ? query.gesture : null);
 
     if(!gesture) return;
 

@@ -123,6 +123,6 @@ export class EffectAssetDownloadManager
 
         if(!await library.downloadAsset()) return;
 
-        this._structure.registerAnimation(library.animation);
+        if(library.animation) this._structure.registerAnimation(library.animation);
     }
 }

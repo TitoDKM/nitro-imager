@@ -1,30 +1,23 @@
-import { GetActionRequest } from './GetActionRequest';
-import { GetDanceRequest } from './GetDanceRequest';
-import { GetDirectionRequest } from './GetDirectionRequest';
-import { GetEffectRequest } from './GetEffectRequest';
-import { GetFigureRequest } from './GetFigureRequest';
-import { GetFrameNumberRequest } from './GetFrameNumberRequest';
-import { GetGestureRequest } from './GetGestureRequest';
-import { GetHeadDirectionRequest } from './GetHeadDirectionRequest';
-import { GetImageFormatRequest } from './GetImageFormatRequest';
-import { GetSetTypeRequest } from './GetSetTypeRequest';
-import { GetSizeRequest } from './GetSizeRequest';
+import { AvatarRenderManager, AvatarSetType } from '../../../../avatar';
 import { IFigureBuildOptions } from './IFigureBuildOptions';
 import { RequestQuery } from './RequestQuery';
 
 export const BuildFigureOptionsRequest = (query: RequestQuery) =>
 {
-    const figure = GetFigureRequest(query);
-    const size = GetSizeRequest(query);
-    const setType = GetSetTypeRequest(query);
-    const direction = (GetDirectionRequest(query) || 2);
-    const headDirection = (GetHeadDirectionRequest(query) || direction);
-    const action = GetActionRequest(query);
-    const gesture = GetGestureRequest(query);
-    const dance = GetDanceRequest(query);
-    const effect = GetEffectRequest(query);
-    const frameNumber = GetFrameNumberRequest(query);
-    const imageFormat = GetImageFormatRequest(query);
+    let figure = AvatarRenderManager.DEFAULT_FIGURE;
+
+    if(query.figure && query.figure.length) figure = query.figure;
+
+    const size = (query.size === 's') ? 0.5 : ((query.size === 'l') ? 2 : 1);
+    const setType = ((query.headonly && query.headonly === '1') ? AvatarSetType.HEAD : AvatarSetType.FULL);
+    const direction = ((query.direction && query.direction.length) ? parseInt(query.direction) : 2);
+    const headDirection = ((query.head_direction && query.head_direction.length) ? parseInt(query.head_direction) : direction);
+    const action = ((query.action && query.action.length) ? query.action : null);
+    const gesture = ((query.gesture && query.gesture.length) ? query.gesture : null);
+    const dance = ((query.dance && query.dance.length) ? parseInt(query.dance) : null);
+    const effect = ((query.effect && query.effect.length) ? parseInt(query.effect) : null);
+    const frameNumber = ((query.frame_num && query.frame_num.length) ? parseInt(query.frame_num) : -1);
+    const imageFormat = ((query.img_format === 'gif') ? 'gif' : 'png');
 
     return {
         figure,

@@ -9,9 +9,10 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "resolveJsonModule": true,
-        "target": "es6",
+        "target": "es2022",
         "sourceMap": false,
         "allowJs": false,
+        "moduleResolution": "node",
         "baseUrl": "./src",
         "outDir": "./dist"
     },
